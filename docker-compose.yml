@@ -1,0 +1,49 @@
+# Usage: copy .env.example to .env, set the secrets, then `docker compose up --build`.
+# The dashboard is served on http://127.0.0.1:${WEB_PORT:-8081}. PostgreSQL and the
+# API are not published to the host.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: compatlab
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: compatlab
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U compatlab -d compatlab"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: deployments/docker/Dockerfile.api
+    environment:
+      STORE: postgres
+      DATABASE_URL: postgres://compatlab:${POSTGRES_PASSWORD}@postgres:5432/compatlab?sslmode=disable
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET (at least 32 characters) in .env}
+      ALLOWED_TARGET_HOSTS: ${ALLOWED_TARGET_HOSTS:-}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-172.16.0.0/12}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/server", "--healthcheck"]
+      interval: 10s
+      timeout: 4s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: deployments/docker/Dockerfile.web
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8081}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:

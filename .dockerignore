@@ -1,0 +1,7 @@
+.git
+.env
+**/node_modules
+apps/web/dist
+bin
+docs
+*.md
