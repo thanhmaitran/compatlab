@@ -1,0 +1,2040 @@
+{
+ "description": "Hand-labelled specification pairs. 'classification' is the expected BACKWARD classification. Labels were written with the fixtures and should be reviewed independently before the results are cited.",
+ "cases": [
+  {
+   "name": "endpoint-removed",
+   "description": "An endpoint disappears",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/a": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     },
+     "/b": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/a": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/b",
+     "change_type": "ENDPOINT_REMOVED",
+     "location": "endpoint",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "endpoint-added",
+   "description": "A new endpoint appears",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/a": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/a": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     },
+     "/b": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/b",
+     "change_type": "ENDPOINT_ADDED",
+     "location": "endpoint",
+     "constraint": "",
+     "classification": "NON_BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "method-removed",
+   "description": "One HTTP method is removed from an existing path",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/a": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      },
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/a": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "POST",
+     "path": "/a",
+     "change_type": "METHOD_REMOVED",
+     "location": "endpoint",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "response-type-changed",
+   "description": "A response property changes type",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             },
+             "name": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "integer"
+             },
+             "name": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/u",
+     "change_type": "TYPE_CHANGED",
+     "location": "response.200.body.id",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "response-field-removed-and-added",
+   "description": "One response field is removed and another added",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             },
+             "email": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             },
+             "nickname": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/u",
+     "change_type": "FIELD_REMOVED",
+     "location": "response.200.body.email",
+     "constraint": "",
+     "classification": "BREAKING"
+    },
+    {
+     "method": "GET",
+     "path": "/u",
+     "change_type": "FIELD_ADDED",
+     "location": "response.200.body.nickname",
+     "constraint": "",
+     "classification": "CONDITIONAL"
+    }
+   ]
+  },
+  {
+   "name": "request-required-field-added",
+   "description": "A new required request field",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "post": {
+       "responses": {
+        "201": {
+         "description": "c"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "name"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "post": {
+       "responses": {
+        "201": {
+         "description": "c"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "password": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "name",
+            "password"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "POST",
+     "path": "/u",
+     "change_type": "FIELD_ADDED",
+     "location": "request.body.password",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "request-optional-field-added",
+   "description": "A new optional request field",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "post": {
+       "responses": {
+        "201": {
+         "description": "c"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "name"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "post": {
+       "responses": {
+        "201": {
+         "description": "c"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "nick": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "name"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "POST",
+     "path": "/u",
+     "change_type": "FIELD_ADDED",
+     "location": "request.body.nick",
+     "constraint": "",
+     "classification": "NON_BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "parameter-becomes-required",
+   "description": "An optional query parameter becomes required",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/list": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "page",
+         "in": "query",
+         "required": false,
+         "schema": {
+          "type": "integer"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/list": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "page",
+         "in": "query",
+         "required": true,
+         "schema": {
+          "type": "integer"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/list",
+     "change_type": "REQUIRED_CHANGED",
+     "location": "parameter.query.page",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "parameter-removed-and-added",
+   "description": "One optional parameter is replaced by another",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/list": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "limit",
+         "in": "query",
+         "required": false,
+         "schema": {
+          "type": "integer"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/list": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "offset",
+         "in": "query",
+         "required": false,
+         "schema": {
+          "type": "integer"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/list",
+     "change_type": "PARAMETER_REMOVED",
+     "location": "parameter.query.limit",
+     "constraint": "",
+     "classification": "CONDITIONAL"
+    },
+    {
+     "method": "GET",
+     "path": "/list",
+     "change_type": "PARAMETER_ADDED",
+     "location": "parameter.query.offset",
+     "constraint": "",
+     "classification": "NON_BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "enum-changes",
+   "description": "A response enum grows and a request enum shrinks",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/e": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "status": {
+              "type": "string",
+              "enum": [
+               "a",
+               "b"
+              ]
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "kind": {
+             "type": "string",
+             "enum": [
+              "x",
+              "y",
+              "z"
+             ]
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/e": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "status": {
+              "type": "string",
+              "enum": [
+               "a",
+               "b",
+               "c"
+              ]
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "kind": {
+             "type": "string",
+             "enum": [
+              "x",
+              "y"
+             ]
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/e",
+     "change_type": "ENUM_CHANGED",
+     "location": "response.200.body.status",
+     "constraint": "",
+     "classification": "CONDITIONAL"
+    },
+    {
+     "method": "POST",
+     "path": "/e",
+     "change_type": "ENUM_CHANGED",
+     "location": "request.body.kind",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "status-codes-changed",
+   "description": "One documented status disappears and another appears",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/s": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        },
+        "404": {
+         "description": "nf"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/s": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        },
+        "429": {
+         "description": "rl"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/s",
+     "change_type": "STATUS_CODE_REMOVED",
+     "location": "response.404",
+     "constraint": "",
+     "classification": "CONDITIONAL"
+    },
+    {
+     "method": "GET",
+     "path": "/s",
+     "change_type": "STATUS_CODE_ADDED",
+     "location": "response.429",
+     "constraint": "",
+     "classification": "CONDITIONAL"
+    }
+   ]
+  },
+  {
+   "name": "authentication-added",
+   "description": "An operation starts requiring a bearer token",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/p": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/p": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "security": [
+        {
+         "bearer": []
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/p",
+     "change_type": "AUTH_CHANGED",
+     "location": "security",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "authentication-removed",
+   "description": "An operation stops requiring a bearer token",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/p": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "security": [
+        {
+         "bearer": []
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/p": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/p",
+     "change_type": "AUTH_CHANGED",
+     "location": "security",
+     "constraint": "",
+     "classification": "NON_BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "constraints-changed",
+   "description": "A request maximum is tightened and a response maxLength is relaxed",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/c": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "size",
+         "in": "query",
+         "required": false,
+         "schema": {
+          "type": "integer",
+          "maximum": 100
+         }
+        }
+       ]
+      }
+     },
+     "/c2": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "name": {
+              "type": "string",
+              "maxLength": 10
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/c": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "size",
+         "in": "query",
+         "required": false,
+         "schema": {
+          "type": "integer",
+          "maximum": 50
+         }
+        }
+       ]
+      }
+     },
+     "/c2": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "name": {
+              "type": "string",
+              "maxLength": 20
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/c",
+     "change_type": "CONSTRAINT_CHANGED",
+     "location": "parameter.query.size",
+     "constraint": "maximum",
+     "classification": "BREAKING"
+    },
+    {
+     "method": "GET",
+     "path": "/c2",
+     "change_type": "CONSTRAINT_CHANGED",
+     "location": "response.200.body.name",
+     "constraint": "maxLength",
+     "classification": "CONDITIONAL"
+    }
+   ]
+  },
+  {
+   "name": "response-becomes-nullable",
+   "description": "A response property may now be null",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/n": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "x": {
+              "type": "string"
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/n": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "x": {
+              "type": "string",
+              "nullable": true
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/n",
+     "change_type": "CONSTRAINT_CHANGED",
+     "location": "response.200.body.x",
+     "constraint": "nullable",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "path-parameter-renamed",
+   "description": "Only the name of a path parameter changes",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/users/{id}": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "id",
+         "in": "path",
+         "required": true,
+         "schema": {
+          "type": "string"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/users/{userId}": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "parameters": [
+        {
+         "name": "userId",
+         "in": "path",
+         "required": true,
+         "schema": {
+          "type": "string"
+         }
+        }
+       ]
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": []
+  },
+  {
+   "name": "nested-array-item-type-changed",
+   "description": "A property inside an array of objects changes type",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/n": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "items": {
+              "type": "array",
+              "items": {
+               "type": "object",
+               "properties": {
+                "id": {
+                 "type": "string"
+                },
+                "tags": {
+                 "type": "array",
+                 "items": {
+                  "type": "string"
+                 }
+                }
+               },
+               "required": [
+                "id"
+               ]
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/n": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "items": {
+              "type": "array",
+              "items": {
+               "type": "object",
+               "properties": {
+                "id": {
+                 "type": "integer"
+                },
+                "tags": {
+                 "type": "array",
+                 "items": {
+                  "type": "string"
+                 }
+                }
+               },
+               "required": [
+                "id"
+               ]
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/n",
+     "change_type": "TYPE_CHANGED",
+     "location": "response.200.body.items[].id",
+     "constraint": "",
+     "classification": "BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "required-flags-relaxed",
+   "description": "A response field becomes optional and a request field becomes optional",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/r": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             },
+             "email": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id",
+             "email"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "/r2": {
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "a": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "a"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/r": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             },
+             "email": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "/r2": {
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "a": {
+             "type": "string"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "GET",
+     "path": "/r",
+     "change_type": "REQUIRED_CHANGED",
+     "location": "response.200.body.email",
+     "constraint": "",
+     "classification": "BREAKING"
+    },
+    {
+     "method": "POST",
+     "path": "/r2",
+     "change_type": "REQUIRED_CHANGED",
+     "location": "request.body.a",
+     "constraint": "",
+     "classification": "NON_BREAKING"
+    }
+   ]
+  },
+  {
+   "name": "number-widening",
+   "description": "integer becomes number in a request and in a response",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/w": {
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "qty": {
+             "type": "integer"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "/w2": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "total": {
+              "type": "integer"
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/w": {
+      "post": {
+       "responses": {
+        "200": {
+         "description": "ok"
+        }
+       },
+       "requestBody": {
+        "required": true,
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "qty": {
+             "type": "number"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "/w2": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "total": {
+              "type": "number"
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": [
+    {
+     "method": "POST",
+     "path": "/w",
+     "change_type": "TYPE_CHANGED",
+     "location": "request.body.qty",
+     "constraint": "",
+     "classification": "NON_BREAKING"
+    },
+    {
+     "method": "GET",
+     "path": "/w2",
+     "change_type": "TYPE_CHANGED",
+     "location": "response.200.body.total",
+     "constraint": "",
+     "classification": "CONDITIONAL"
+    }
+   ]
+  },
+  {
+   "name": "identical",
+   "description": "No change at all",
+   "base": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "target": {
+    "openapi": "3.0.3",
+    "info": {
+     "title": "t",
+     "version": "1"
+    },
+    "paths": {
+     "/u": {
+      "get": {
+       "responses": {
+        "200": {
+         "description": "ok",
+         "content": {
+          "application/json": {
+           "schema": {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id"
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    "components": {
+     "securitySchemes": {
+      "bearer": {
+       "type": "http",
+       "scheme": "bearer"
+      }
+     }
+    }
+   },
+   "expected": []
+  }
+ ]
+}
