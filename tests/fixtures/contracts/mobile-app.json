@@ -1,0 +1,15 @@
+{
+  "contract_version": "1.0",
+  "consumer": "mobile-app",
+  "provider": "users-api",
+  "interactions": [
+    {
+      "description": "Retrieve user",
+      "request": { "method": "GET", "path": "/users/u-123" },
+      "response": {
+        "status": 200,
+        "body": { "id": "u-123", "email": "user@example.com" }
+      }
+    }
+  ]
+}

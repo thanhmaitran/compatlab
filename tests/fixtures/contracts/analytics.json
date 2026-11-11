@@ -1,0 +1,15 @@
+{
+  "contract_version": "1.0",
+  "consumer": "analytics",
+  "provider": "users-api",
+  "interactions": [
+    {
+      "description": "Read user display name",
+      "request": { "method": "GET", "path": "/users/u-123" },
+      "response": {
+        "status": 200,
+        "body": { "name": "Example User" }
+      }
+    }
+  ]
+}
