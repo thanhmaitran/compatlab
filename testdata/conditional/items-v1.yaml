@@ -1,0 +1,22 @@
+openapi: 3.0.3
+info:
+  title: Items API
+  version: 1.0.0
+paths:
+  /items:
+    get:
+      operationId: listItems
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id:
+                    type: string
+                  state:
+                    type: string
+                    enum: [open, closed]
