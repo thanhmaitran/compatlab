@@ -1,0 +1,485 @@
+openapi: 3.0.3
+info:
+  title: CompatLab API
+  version: 0.1.0
+  description: REST API of the CompatLab backend. All /api/v1 operations except register and login require a bearer token.
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      operationId: health
+      security: []
+      responses:
+        "200":
+          description: The process is running
+  /ready:
+    get:
+      operationId: ready
+      security: []
+      responses:
+        "200":
+          description: Dependencies are reachable
+        "503":
+          description: A dependency is unavailable
+  /api/v1/auth/register:
+    post:
+      operationId: register
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        "400":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+  /api/v1/auth/login:
+    post:
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Signed in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        "401":
+          $ref: "#/components/responses/Error"
+        "429":
+          $ref: "#/components/responses/Error"
+  /api/v1/users:
+    post:
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created (admins only)
+        "403":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+  /api/v1/projects:
+    get:
+      operationId: listProjects
+      responses:
+        "200":
+          description: Projects of the organization
+    post:
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectRequest"
+      responses:
+        "201":
+          description: Project created
+        "409":
+          $ref: "#/components/responses/Error"
+  /api/v1/projects/{id}:
+    get:
+      operationId: getProject
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: The project
+        "404":
+          $ref: "#/components/responses/Error"
+  /api/v1/projects/{id}/specifications:
+    post:
+      operationId: uploadSpecification
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadSpecRequest"
+      responses:
+        "201":
+          description: Version stored
+        "400":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+        "413":
+          $ref: "#/components/responses/Error"
+  /api/v1/projects/{id}/versions:
+    get:
+      operationId: listVersions
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Versions of the project
+  /api/v1/projects/{id}/analyze:
+    post:
+      operationId: analyze
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeRequest"
+      responses:
+        "201":
+          description: Analysis stored
+        "400":
+          $ref: "#/components/responses/Error"
+  /api/v1/projects/{id}/analyses:
+    get:
+      operationId: listAnalyses
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Analyses of the project
+  /api/v1/projects/{id}/contracts:
+    get:
+      operationId: listContracts
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Consumer contracts
+  /api/v1/projects/{id}/policies:
+    get:
+      operationId: listPolicies
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Release policies
+  /api/v1/projects/{id}/test-runs:
+    get:
+      operationId: listTestRuns
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Test runs
+  /api/v1/projects/{id}/gates:
+    get:
+      operationId: listGates
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Release-gate evaluations
+  /api/v1/projects/{id}/analytics:
+    get:
+      operationId: getAnalytics
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Historical metrics
+  /api/v1/versions/{id}/specification:
+    get:
+      operationId: inspectVersion
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Summary of paths, operations and schemas
+  /api/v1/analyses/{id}:
+    get:
+      operationId: getAnalysis
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Analysis with its classified changes
+        "404":
+          $ref: "#/components/responses/Error"
+  /api/v1/analyses/{id}/changes:
+    get:
+      operationId: getChanges
+      parameters:
+        - $ref: "#/components/parameters/Id"
+        - name: classification
+          in: query
+          schema:
+            type: string
+            enum: [BREAKING, NON_BREAKING, CONDITIONAL]
+        - name: direction
+          in: query
+          schema:
+            type: string
+            enum: [BACKWARD, FORWARD]
+      responses:
+        "200":
+          description: Filtered changes
+        "400":
+          $ref: "#/components/responses/Error"
+  /api/v1/contracts:
+    post:
+      operationId: registerContract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterContractRequest"
+      responses:
+        "201":
+          description: Contract registered
+        "400":
+          $ref: "#/components/responses/Error"
+  /api/v1/contracts/{id}/verify:
+    post:
+      operationId: verifyContract
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyContractRequest"
+      responses:
+        "200":
+          description: Verification result
+  /api/v1/test-suites/generate:
+    post:
+      operationId: generateSuite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateSuiteRequest"
+      responses:
+        "201":
+          description: Suite generated
+  /api/v1/test-suites/{id}:
+    get:
+      operationId: getSuite
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: The suite with its cases
+  /api/v1/test-runs:
+    post:
+      operationId: runTests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunTestsRequest"
+      responses:
+        "201":
+          description: Run executed (mock by default; targets must be on the operator allowlist)
+        "400":
+          $ref: "#/components/responses/Error"
+  /api/v1/test-runs/{id}:
+    get:
+      operationId: getTestRun
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: Run with results
+  /api/v1/policies:
+    post:
+      operationId: createPolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePolicyRequest"
+      responses:
+        "201":
+          description: Policy created (admins only)
+        "403":
+          $ref: "#/components/responses/Error"
+  /api/v1/gate/evaluate:
+    post:
+      operationId: evaluateGate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GateRequest"
+      responses:
+        "201":
+          description: Report with the release decision
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorBody"
+  schemas:
+    ErrorBody:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+    Token:
+      type: object
+      required: [token]
+      properties:
+        token:
+          type: string
+    RegisterRequest:
+      type: object
+      required: [organization, email, password]
+      properties:
+        organization:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    CreateUserRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [member, admin]
+    CreateProjectRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    UploadSpecRequest:
+      type: object
+      required: [version_label, content]
+      properties:
+        version_label:
+          type: string
+        filename:
+          type: string
+        content:
+          type: string
+    AnalyzeRequest:
+      type: object
+      required: [base_version_id, target_version_id]
+      properties:
+        base_version_id:
+          type: string
+        target_version_id:
+          type: string
+    RegisterContractRequest:
+      type: object
+      required: [project_id, contract]
+      properties:
+        project_id:
+          type: string
+        contract:
+          type: object
+    VerifyContractRequest:
+      type: object
+      required: [version_id]
+      properties:
+        version_id:
+          type: string
+    GenerateSuiteRequest:
+      type: object
+      required: [version_id]
+      properties:
+        version_id:
+          type: string
+        analysis_id:
+          type: string
+        max_cases_per_endpoint:
+          type: integer
+        seed:
+          type: integer
+    RunTestsRequest:
+      type: object
+      required: [suite_id, version_id]
+      properties:
+        suite_id:
+          type: string
+        version_id:
+          type: string
+        target:
+          type: string
+    CreatePolicyRequest:
+      type: object
+      required: [project_id, policy]
+      properties:
+        project_id:
+          type: string
+        policy:
+          type: object
+    GateRequest:
+      type: object
+      required: [project_id, analysis_id, policy_id]
+      properties:
+        project_id:
+          type: string
+        analysis_id:
+          type: string
+        policy_id:
+          type: string
+        contract_ids:
+          type: array
+          items:
+            type: string
+        test_run_id:
+          type: string
