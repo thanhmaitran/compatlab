@@ -1,0 +1,45 @@
+{
+  "name": "order lifecycle",
+  "on_failure": "stop",
+  "steps": [
+    {
+      "name": "create",
+      "method": "POST",
+      "path": "/orders",
+      "body": { "sku": "abc", "quantity": 1 },
+      "extract": { "order_id": "id" },
+      "assertions": [
+        { "target": "status", "operator": "eq", "expected": "201" },
+        { "target": "body.status", "operator": "eq", "expected": "created" }
+      ],
+      "timeout_ms": 3000,
+      "retry": { "max_attempts": 2, "backoff_ms": 200 }
+    },
+    {
+      "name": "retrieve",
+      "method": "GET",
+      "path": "/orders/{{order_id}}",
+      "assertions": [{ "target": "body.id", "operator": "eq", "expected": "{{order_id}}" }]
+    },
+    {
+      "name": "pay",
+      "method": "PATCH",
+      "path": "/orders/{{order_id}}",
+      "body": { "status": "paid" },
+      "assertions": [{ "target": "body.status", "operator": "eq", "expected": "paid" }]
+    },
+    {
+      "name": "retrieve updated",
+      "method": "GET",
+      "path": "/orders/{{order_id}}",
+      "assertions": [{ "target": "body.status", "operator": "eq", "expected": "paid" }]
+    },
+    {
+      "name": "cancel",
+      "method": "DELETE",
+      "path": "/orders/{{order_id}}",
+      "assertions": [{ "target": "status", "operator": "eq", "expected": "204" }]
+    }
+  ],
+  "cleanup": [{ "name": "ensure removed", "method": "DELETE", "path": "/orders/{{order_id}}" }]
+}
