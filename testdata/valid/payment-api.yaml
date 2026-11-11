@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: Payment API
+  version: 2.1.0
+security:
+  - bearerAuth: []
+paths:
+  /payments:
+    post:
+      operationId: createPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Payment"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /payments/{paymentId}:
+    get:
+      operationId: getPayment
+      parameters:
+        - $ref: "#/components/parameters/PaymentId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+  /payments/{paymentId}/refunds:
+    parameters:
+      - $ref: "#/components/parameters/PaymentId"
+    post:
+      operationId: refundPayment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount:
+                  $ref: "#/components/schemas/Money"
+      responses:
+        "202":
+          description: Accepted
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    PaymentId:
+      name: paymentId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Money:
+      type: object
+      required: [currency, value]
+      properties:
+        currency:
+          type: string
+          enum: [USD, EUR, GBP]
+        value:
+          type: number
+          minimum: 0
+    Payment:
+      type: object
+      required: [id, amount]
+      properties:
+        id:
+          type: string
+        amount:
+          $ref: "#/components/schemas/Money"
+        status:
+          type: string
+          enum: [pending, settled, failed]
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
