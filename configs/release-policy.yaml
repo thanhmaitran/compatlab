@@ -1,0 +1,6 @@
+compatlab:
+  policy:
+    fail_on:
+      - BREAKING
+    require_contract_tests: false
+    minimum_pass_rate: 0
